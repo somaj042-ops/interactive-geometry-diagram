@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موسوعة الهندسة التفاعلية الشاملة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --info: #1abc9c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --civil: #3498db;
+            --mechanical: #e74c3c;
+            --electrical: #f39c12;
+            --computer: #9b59b6;
+            --chemical: #1abc9c;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: var(--light);
+            min-height: 100vh;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* الهيدر */
+        header {
+            text-align: center;
+            padding: 40px 0;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--civil), var(--mechanical), var(--electrical), var(--computer), var(--chemical));
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+        
+        /* التنقل الرئيسي */
+        .main-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        .nav-btn {
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-5px);
+        }
+        
+        .nav-btn.active {
+            background: var(--secondary);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        /* المحتوى الرئيسي */
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        /* الشريط الجانبي */
+        .sidebar {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+        
+        .sidebar-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .sidebar-list {
+            list-style: none;
+        }
+        
+        .sidebar-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-5px);
+        }
+        
+        .sidebar-item.active {
+            background: var(--info);
+            font-weight: bold;
+        }
+        
+        /* لوحة المحتوى */
+        .content-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            min-height: 800px;
+        }
+        
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .section-subtitle {
+            font-size: 1.6rem;
+            margin: 30px 0 15px;
+            color: var(--info);
+        }
+        
+        /* البطاقات */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 25px 0;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-icon {
+            font-size: 1.8rem;
+        }
+        
+        .card-content {
+            line-height: 1.6;
+        }
+        
+        /* التخصصات */
+        .specialty-card {
+            border-left: 5px solid;
+            padding-left: 20px;
+        }
+        
+        .civil { border-color: var(--civil); }
+        .mechanical { border-color: var(--mechanical); }
+        .electrical { border-color: var(--electrical); }
+        .computer { border-color: var(--computer); }
+        .chemical { border-color: var(--chemical); }
+        
+        /* الأدوات */
+        .tools-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .tool-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+        }
+        
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .calculate-btn:hover {
+            background: #27ae60;
+            transform: translateY(-3px);
+        }
+        
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            min-height: 100px;
+        }
+        
+        /* الجداول */
+        .table-container {
+            overflow-x: auto;
+            margin: 25px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: right;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        th {
+            background: rgba(255, 255, 255, 0.2);
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* الفوتر */
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px;
+            font-size: 1rem;
+            opacity: 0.8;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* التجاوب */
+        @media (max-width: 1100px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+            
+            .tools-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-nav {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-drafting-compass"></i> موسوعة الهندسة التفاعلية الشاملة</h1>
+            <p class="subtitle">منصة متكاملة لاستكشاف عالم الهندسة بجميع تخصصاته، من المفاهيم الأساسية إلى التطبيقات المتقدمة، مع أدوات تفاعلية وموارد تعليمية شاملة</p>
+        </header>
+        
+        <nav class="main-nav">
+            <button class="nav-btn active" data-section="overview">
+                <i class="fas fa-home"></i> نظرة عامة
+            </button>
+            <button class="nav-btn" data-section="specialties">
+                <i class="fas fa-cogs"></i> التخصصات الهندسية
+            </button>
+            <button class="nav-btn" data-section="tools">
+                <i class="fas fa-tools"></i> الأدوات الحسابية
+            </button>
+            <button class="nav-btn" data-section="history">
+                <i class="fas fa-history"></i> تاريخ الهندسة
+            </button>
+            <button class="nav-btn" data-section="careers">
+                <i class="fas fa-briefcase"></i> المسارات المهنية
+            </button>
+            <button class="nav-btn" data-section="resources">
+                <i class="fas fa-book"></i> المصادر والمراجع
+            </button>
+        </nav>
+        
+        <div class="main-content">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title"><i class="fas fa-sitemap"></i> فروع الهندسة</h3>
+                    <ul class="sidebar-list">
+                        <li class="sidebar-item active" data-topic="intro">مقدمة في الهندسة</li>
+                        <li class="sidebar-item" data-topic="math-basics">الأساسيات الرياضية</li>
+                        <li class="sidebar-item" data-topic="mechanics">الميكانيكا</li>
+                        <li class="sidebar-item" data-topic="structures">الإنشاءات</li>
+                        <li class="sidebar-item" data-topic="thermodynamics">الديناميكا الحرارية</li>
+                        <li class="sidebar-item" data-topic="electricity">الكهرباء والإلكترونيات</li>
+                        <li class="sidebar-item" data-topic="materials">علم المواد</li>
+                        <li class="sidebar-item" data-topic="cad">التصميم بمساعدة الحاسوب</li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title"><i class="fas fa-calculator"></i> أدوات سريعة</h3>
+                    <ul class="sidebar-list">
+                        <li class="sidebar-item" data-tool="unit-converter">محول الوحدات</li>
+                        <li class="sidebar-item" data-tool="formula-reference">مرجع الصيغ</li>
+                        <li class="sidebar-item" data-tool="material-selector">دليل المواد</li>
+                        <li class="sidebar-item" data-tool="symbols-guide">رموز هندسية</li>
+                    </ul>
+                </div>
+            </aside>
+            
+            <main class="content-panel">
+                <!-- نظرة عامة -->
+                <section id="overview" class="content-section active">
+                    <h2 class="section-title"><i class="fas fa-binoculars"></i> نظرة عامة على الهندسة</h2>
+                    
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h3 class="card-title"><i class="fas fa-rocket card-icon"></i> ما هي الهندسة؟</h3>
+                            <p class="card-content">الهندسة هي تطبيق العلوم والرياضيات لحل المشكلات. يحدد المهندسون كيف تعمل الأشياء وتجد حلولاً اقتصادية للمشاكل التقنية.</p>
+                        </div>
+                        
+                        <div class="card">
+                            <h3 class="card-title"><i class="fas fa-cube card-icon"></i> أهمية الهندسة</h3>
+                            <p class="card-content">تشكل الهندسة العالم من حولنا - من المباني والجسور إلى الهواتف الذكية والطاقة المتجددة. كل منتع تقريباً تم تصميمه بمساعدة المهندسين.</p>
+                        </div>
+                        
+                        <div class="card">
+                            <h3 class="card-title"><i class="fas fa-graduation-cap card-icon"></i> المهارات المطلوبة</h3>
+                            <p class="card-content">يتطلب العمل في الهندسة مهارات في الرياضيات والعلوم، بالإضافة إلى التفكير النقدي، الإبداع، والعمل الجماعي.</p>
+                        </div>
+                    </div>
+                    
+                    <h3 class="section-subtitle">الأقسام الرئيسية للهندسة</h3>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>المجال</th>
+                                    <th>الوصف</th>
+                                    <th>التطبيقات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>الهندسة المدنية</strong></td>
+                                    <td>تصميم وبناء وتشغيل البنية التحتية</td>
+                                    <td>الجسور، الطرق، المباني، أنظمة المياه</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>الهندسة الميكانيكية</strong></td>
+                                    <td>تصميم وتصنيع الأنظمة الميكانيكية</td>
+                                    <td>المحركات، الروبوتات، أنظمة التبريد</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>الهندسة الكهربائية</strong></td>
+                                    <td>دراسة وتطبيقات الكهرباء والإلكترونيات</td>
+                                    <td>الدوائر الكهربائية، أنظمة الطاقة، الاتصالات</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>هندسة الحاسوب</strong></td>
+                                    <td>تصميم وتطوير أنظمة الحاسوب</td>
+                                    <td>البرمجيات، الأجهزة، الشبكات</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>الهندسة الكيميائية</strong></td>
+                                    <td>تحويل المواد الخام إلى منتجات مفيدة</td>
+                                    <td>البتروكيماويات، الأدوية، المواد الجديدة</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- التخصصات الهندسية -->
+                <section id="specialties" class="content-section">
+                    <h2 class="section-title"><i class="fas fa-cogs"></i> التخصصات الهندسية</h2>
+                    <p>استكشف مجموعة التخصصات الهندسية المتنوعة واختر المسار الذي يناسب اهتماماتك وقدراتك.</p>
+                    
+                    <div class="cards-grid">
+                        <div class="card specialty-card civil">
+                            <h3 class="card-title"><i class="fas fa-hard-hat card-icon"></i> الهندسة المدنية</h3>
+                            <p class="card-content">تتخصص في تصميم وبناء وتشغيل البنية التحتية مثل الجسور والطرق والمباني وأنظمة المياه. يعمل المهندسون المدنيون على إنشاء بيئة مبنية مستدامة وآمنة.</p>
+                        </div>
+                        
+                        <div class="card specialty-card mechanical">
+                            <h3 class="card-title"><i class="fas fa-cog card-icon"></i> الهندسة الميكانيكية</h3>
+                            <p class="card-content">تركز على تصميم وتصنيع الأنظمة الميكانيكية بما في ذلك المحركات والآلات وأنظمة التبريد والتدفئة. تطبق مبادئ الميكانيكا والديناميكا الحرارية.</p>
+                        </div>
+                        
+                        <div class="card specialty-card electrical">
+                            <h3 class="card-title"><i class="fas fa-bolt card-icon"></i> الهندسة الكهربائية</h3>
+                            <p class="card-content">تتعامل مع دراسة وتطبيقات الكهرباء والإلكترونيات والكهرومغناطيسية. تشمل مجالاتها أنظمة الطاقة والاتصالات والإلكترونيات والتحكم.</p>
+                        </div>
+                        
+                        <div class="card specialty-card computer">
+                            <h3 class="card-title"><i class="fas fa-laptop-code card-icon"></i> هندسة الحاسوب</h3>
+                            <p class="card-content">تجمع بين الهندسة الكهربائية وعلوم الحاسوب ل
