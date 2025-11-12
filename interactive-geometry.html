@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مخطط هندسي تفاعلي</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        
+        .geometry-canvas {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .canvas-container {
+            width: 100%;
+            height: 400px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background: #357ae8;
+            transform: translateY(-2px);
+        }
+        
+        .info-panel {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .info-section {
+            margin-bottom: 25px;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 8px;
+        }
+        
+        h3 {
+            font-size: 1.4rem;
+            margin: 15px 0 10px;
+        }
+        
+        p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .formula {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+        
+        .shape {
+            position: absolute;
+            transition: all 0.5s ease;
+        }
+        
+        .circle {
+            border-radius: 50%;
+            background: rgba(74, 144, 226, 0.7);
+            border: 2px solid #fff;
+        }
+        
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 100px solid rgba(226, 74, 74, 0.7);
+        }
+        
+        .rectangle {
+            background: rgba(74, 226, 144, 0.7);
+            border: 2px solid #fff;
+        }
+        
+        .pentagon {
+            background: rgba(226, 200, 74, 0.7);
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+            border: 2px solid #fff;
+        }
+        
+        .active {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+            z-index: 10;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>مخطط هندسي تفاعلي</h1>
+            <p class="subtitle">استكشف الأشكال الهندسية وخصائصها</p>
+        </header>
+        
+        <div class="content">
+            <div class="geometry-canvas">
+                <h2>منطقة الأشكال الهندسية</h2>
+                <div class="canvas-container" id="canvas">
+                    <!-- الأشكال سيتم إضافتها عبر JavaScript -->
+                </div>
+                <div class="controls">
+                    <button id="btn-circle">دائرة</button>
+                    <button id="btn-triangle">مثلث</button>
+                    <button id="btn-rectangle">مستطيل</button>
+                    <button id="btn-pentagon">خماسي</button>
+                    <button id="btn-reset">إعادة تعيين</button>
+                </div>
+            </div>
+            
+            <div class="info-panel">
+                <div class="info-section">
+                    <h2>معلومات هندسية</h2>
+                    <p>الهندسة هي فرع من فروع الرياضيات التي تدرس خصائص وعلاقات النقاط والخطوط والسطوح والأجسام الصلبة.</p>
+                </div>
+                
+                <div class="info-section">
+                    <h3>الدائرة</h3>
+                    <p>هي مجموعة من النقاط في مستوى تبعد بعداً ثابتاً عن نقطة معينة تسمى المركز.</p>
+                    <div class="formula">
+                        المساحة = π × نصف القطر²<br>
+                        المحيط = 2 × π × نصف القطر
+                    </div>
+                </div>
+                
+                <div class="info-section">
+                    <h3>المثلث</h3>
+                    <p>هو مضلع له ثلاثة أضلاع وثلاث زوايا وثلاث رؤوس.</p>
+                    <div class="formula">
+                        المساحة = ½ × القاعدة × الارتفاع<br>
+                        المحيط = مجموع أطوال الأضلاع
+                    </div>
+                </div>
+                
+                <div class="info-section">
+                    <h3>المستطيل</h3>
+                    <p>هو متوازي أضلاع جميع زواياه قائمة.</p>
+                    <div class="formula">
+                        المساحة = الطول × العرض<br>
+                        المحيط = 2 × (الطول + العرض)
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>تم تصميم هذا المخطط التفاعلي لتوضيح المفاهيم الهندسية الأساسية باستخدام HTML وCSS وJavaScript</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('canvas');
+            const shapes = [];
+            
+            // إنشاء الأشكال هندسية
+            function createShapes() {
+                // دائرة
+                const circle = document.createElement('div');
+                circle.className = 'shape circle';
+                circle.style.width = '120px';
+                circle.style.height = '120px';
+                circle.style.top = '50px';
+                circle.style.left = '100px';
+                circle.dataset.type = 'circle';
+                
+                // مثلث
+                const triangle = document.createElement('div');
+                triangle.className = 'shape triangle';
+                triangle.style.top = '200px';
+                triangle.style.left = '300px';
+                triangle.dataset.type = 'triangle';
+                
+                // مستطيل
+                const rectangle = document.createElement('div');
+                rectangle.className = 'shape rectangle';
+                rectangle.style.width = '150px';
+                rectangle.style.height = '100px';
+                rectangle.style.top = '50px';
+                rectangle.style.left = '400px';
+                rectangle.dataset.type = 'rectangle';
+                
+                // خماسي
+                const pentagon = document.createElement('div');
+                pentagon.className = 'shape pentagon';
+                pentagon.style.width = '120px';
+                pentagon.style.height = '120px';
+                pentagon.style.top = '200px';
+                pentagon.style.left = '100px';
+                pentagon.dataset.type = 'pentagon';
+                
+                // إضافة الأشكال إلى الـ canvas
+                canvas.appendChild(circle);
+                canvas.appendChild(triangle);
+                canvas.appendChild(rectangle);
+                canvas.appendChild(pentagon);
+                
+                shapes.push(circle, triangle, rectangle, pentagon);
+                
+                // إضافة حدث النقر لكل شكل
+                shapes.forEach(shape => {
+                    shape.addEventListener('click', function() {
+                        // إزالة النشاط من جميع الأشكال
+                        shapes.forEach(s => s.classList.remove('active'));
+                        // إضافة النشاط للشكل المختار
+                        this.classList.add('active');
+                        
+                        // عرض معلومات إضافية حسب نوع الشكل
+                        showShapeInfo(this.dataset.type);
+                    });
+                });
+            }
+            
+            // عرض معلومات الشكل المحدد
+            function showShapeInfo(type) {
+                let info = '';
+                
+                switch(type) {
+                    case 'circle':
+                        info = 'الدائرة: شكل هندسي بسيط يتكون من مجموعة نقاط متساوية البعد عن نقطة مركزية.';
+                        break;
+                    case 'triangle':
+                        info = 'المثلث: أبسط مضلع، له ثلاثة أضلاع وثلاث زوايا.';
+                        break;
+                    case 'rectangle':
+                        info = 'المستطيل: شكل رباعي جميع زواياه قائمة.';
+                        break;
+                    case 'pentagon':
+                        info = 'الخماسي: مضلع له خمسة أضلاع وخمس زوايا.';
+                        break;
+                }
+                
+                alert(info);
+            }
+            
+            // إضافة الأحداث للأزرار
+            document.getElementById('btn-circle').addEventListener('click', function() {
+                resetActive();
+                document.querySelector('.circle').classList.add('active');
+                showShapeInfo('circle');
+            });
+            
+            document.getElementById('btn-triangle').addEventListener('click', function() {
+                resetActive();
+                document.querySelector('.triangle').classList.add('active');
+                showShapeInfo('triangle');
+            });
+            
+            document.getElementById('btn-rectangle').addEventListener('click', function() {
+                resetActive();
+                document.querySelector('.rectangle').classList.add('active');
+                showShapeInfo('rectangle');
+            });
+            
+            document.getElementById('btn-pentagon').addEventListener('click', function() {
+                resetActive();
+                document.querySelector('.pentagon').classList.add('active');
+                showShapeInfo('pentagon');
+            });
+            
+            document.getElementById('btn-reset').addEventListener('click', resetActive);
+            
+            function resetActive() {
+                shapes.forEach(shape => shape.classList.remove('active'));
+            }
+            
+            // تهيئة الأشكال
+            createShapes();
+        });
+    </script>
+</body>
+                                                                                                </html>
